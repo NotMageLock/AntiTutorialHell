@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anti-Tutorial Hell</title>
+    <title>Settings - Anti-Tutorial Hell</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -32,6 +32,7 @@
             display: none;
             position: absolute;
             top: 60px;
+            right: 0;
             background-color: #23272a;
             box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
             z-index: 1;
@@ -64,7 +65,8 @@
 
         #dropdown-arrow {
             transition: transform 0.2s ease;
-            transform: rotate(0deg); /* Point up by default */
+            display: inline-block;
+            vertical-align: middle;
         }
 
         #dropdown-arrow.open {
@@ -77,6 +79,47 @@
             align-items: center;
             height: calc(100vh - 60px);
             text-align: center;
+        }
+
+        #settings-container {
+            background-color: #36393f;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        #settings-container h1 {
+            margin-top: 0;
+        }
+
+        #settings-container label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        #settings-container input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #4f545c;
+            border-radius: 5px;
+            background-color: #2f3136;
+            color: white;
+        }
+
+        #settings-container button {
+            background-color: #7289da;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        #settings-container button:hover {
+            background-color: #5a6ebf;
         }
     </style>
 </head>
@@ -94,7 +137,12 @@
     </div>
 
     <div id="content">
-        <h1>Hello</h1>
+        <div id="settings-container">
+            <h1>Settings</h1>
+            <label for="display-name">Display Name</label>
+            <input type="text" id="display-name" placeholder="Enter display name">
+            <button id="save-btn">Save</button>
+        </div>
     </div>
 
     <script>
@@ -109,6 +157,8 @@
             const profilePic = document.getElementById("profile-pic");
             const username = document.getElementById("username");
             const logoutBtn = document.getElementById("logout-btn");
+            const saveBtn = document.getElementById("save-btn");
+            const displayNameInput = document.getElementById("display-name");
 
             if (window.location.hash) {
                 const hash = window.location.hash.substring(1);
@@ -151,6 +201,11 @@
             logoutBtn.addEventListener("click", () => {
                 localStorage.removeItem("discord_access_token");
                 window.location.reload();
+            });
+
+            saveBtn.addEventListener("click", () => {
+                // Implement save logic here
+                alert("Display name saved: " + displayNameInput.value);
             });
         });
     </script>
