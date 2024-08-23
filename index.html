@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anti Tutorial Hell</title>
+    <title>Discord OAuth2 Sign-In</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -38,7 +38,7 @@
             border-radius: 50%;
             width: 100px;
             height: 100px;
-            margin-bottom Taurus to Sagittarius: What they value in their careers10px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -57,8 +57,8 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const clientId = "1276633303792750664";  // Replace with your Discord client ID
-            const redirectUri = "https://notmagelock.github.io/AntiTutorialHell";  // Replace with your redirect URI
+            const clientId = "1276633303792750664";
+            const redirectUri = "https://notmagelock.github.io/AntiTutorialHell/";
             const scope = "identify";
             
             const loginBtn = document.getElementById("login-btn");
@@ -68,11 +68,21 @@
             const username = document.getElementById("username");
             const logoutBtn = document.getElementById("logout-btn");
 
-            // Check if we have an access token
+            // Check for access token in the URL
+            if (window.location.hash) {
+                const hash = window.location.hash.substring(1);
+                const params = new URLSearchParams(hash);
+                const accessToken = params.get("access_token");
+
+                if (accessToken) {
+                    localStorage.setItem("discord_access_token", accessToken);
+                    window.location.hash = ""; // Clear the hash from the URL
+                }
+            }
+
             const accessToken = localStorage.getItem("discord_access_token");
 
             if (accessToken) {
-                // Fetch the user’s data from Discord API
                 fetch("https://discord.com/api/users/@me", {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
@@ -89,18 +99,15 @@
                     console.error("Error fetching Discord user data:", error);
                 });
             } else {
-                // Show login button if not logged in
                 loginContainer.style.display = "block";
             }
 
             loginBtn.addEventListener("click", () => {
-                // Redirect to Discord OAuth2 page
-                const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}`;
+                const authUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}`;
                 window.location.href = authUrl;
             });
 
             logoutBtn.addEventListener("click", () => {
-                // Remove token and refresh
                 localStorage.removeItem("discord_access_token");
                 window.location.reload();
             });
