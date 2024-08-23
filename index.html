@@ -3,56 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discord OAuth2 Sign-In</title>
+    <title>Anti-Tutorial Hell</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #2c2f33;
             color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
         }
 
-        #content {
-            text-align: center;
-        }
-
-        #login-btn, #logout-btn {
-            background-color: #7289da;
-            color: white;
-            border: none;
+        #top-bar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            background-color: #23272a;
             padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 16px;
+            position: relative;
         }
 
-        #login-btn:hover, #logout-btn:hover {
-            background-color: #5a6ebf;
+        #profile-dropdown {
+            position: relative;
+            cursor: pointer;
+        }
+
+        #profile-dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 50px;
+            background-color: #23272a;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        #profile-dropdown-content a {
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: block;
+            background-color: #23272a;
+        }
+
+        #profile-dropdown-content a:hover {
+            background-color: #2c2f33;
         }
 
         #profile-pic {
             border-radius: 50%;
-            width: 100px;
-            height: 100px;
-            margin-bottom: 10px;
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        #username {
+            margin-right: 10px;
+        }
+
+        #dropdown-arrow {
+            transition: transform 0.2s ease;
+        }
+
+        #dropdown-arrow.open {
+            transform: rotate(180deg);
+        }
+
+        #content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 60px);
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div id="content">
-        <div id="login-container">
-            <h1>Welcome</h1>
-            <button id="login-btn">Sign in with Discord</button>
-        </div>
-        <div id="profile-container" style="display: none;">
+    <div id="top-bar">
+        <div id="profile-dropdown">
             <img id="profile-pic" src="" alt="Profile Picture">
-            <h2 id="username"></h2>
-            <button id="logout-btn">Logout</button>
+            <span id="username">Username</span>
+            <span id="dropdown-arrow">▼</span>
+            <div id="profile-dropdown-content">
+                <a href="#settings">Settings</a>
+                <a id="logout-btn">Logout</a>
+            </div>
         </div>
+    </div>
+
+    <div id="content">
+        <h1>Hello</h1>
     </div>
 
     <script>
@@ -61,14 +101,13 @@
             const redirectUri = "https://notmagelock.github.io/AntiTutorialHell/";
             const scope = "identify";
             
-            const loginBtn = document.getElementById("login-btn");
-            const profileContainer = document.getElementById("profile-container");
-            const loginContainer = document.getElementById("login-container");
+            const profileDropdown = document.getElementById("profile-dropdown");
+            const dropdownArrow = document.getElementById("dropdown-arrow");
+            const profileDropdownContent = document.getElementById("profile-dropdown-content");
             const profilePic = document.getElementById("profile-pic");
             const username = document.getElementById("username");
             const logoutBtn = document.getElementById("logout-btn");
 
-            // Check for access token in the URL
             if (window.location.hash) {
                 const hash = window.location.hash.substring(1);
                 const params = new URLSearchParams(hash);
@@ -76,7 +115,7 @@
 
                 if (accessToken) {
                     localStorage.setItem("discord_access_token", accessToken);
-                    window.location.hash = ""; // Clear the hash from the URL
+                    window.location.hash = "";
                 }
             }
 
@@ -90,8 +129,6 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    loginContainer.style.display = "none";
-                    profileContainer.style.display = "block";
                     profilePic.src = `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.png`;
                     username.textContent = data.username;
                 })
@@ -99,12 +136,13 @@
                     console.error("Error fetching Discord user data:", error);
                 });
             } else {
-                loginContainer.style.display = "block";
+                window.location.href = `https://discord.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}`;
             }
 
-            loginBtn.addEventListener("click", () => {
-                const authUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}`;
-                window.location.href = authUrl;
+            profileDropdown.addEventListener("click", () => {
+                const isOpen = profileDropdownContent.style.display === "block";
+                profileDropdownContent.style.display = isOpen ? "none" : "block";
+                dropdownArrow.classList.toggle("open", !isOpen);
             });
 
             logoutBtn.addEventListener("click", () => {
