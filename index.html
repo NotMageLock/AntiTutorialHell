@@ -84,6 +84,31 @@
             text-align: center;
             margin-top: 20px;
         }
+
+        .lesson-box {
+            width: 300px;
+            height: 150px;
+            background-color: #7289da;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .lesson-box h2 {
+            margin: 0;
+        }
+
+        .completion {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -99,8 +124,12 @@
             </div>
         </div>
     </div>
+
     <div class="main-content">
-        <h1>Hello</h1>
+        <div class="lesson-box" id="lesson-box">
+            <h2>Understanding Problem Solving</h2>
+            <div class="completion" id="completion-percentage">0% Completed</div>
+        </div>
     </div>
 
     <script>
@@ -118,6 +147,7 @@
                 profileDropdown.classList.toggle("open");
             });
 
+            // OAuth2 handling
             if (window.location.hash) {
                 const hash = window.location.hash.substring(1);
                 const params = new URLSearchParams(hash);
@@ -154,12 +184,22 @@
             }
 
             settingsBtn.addEventListener("click", () => {
-                window.location.href = "/AntiTutorialHell/settings/";
+                window.location.href = "/AntiTutorialHell/settings/index.html";
             });
 
             logoutBtn.addEventListener("click", () => {
                 localStorage.removeItem("discord_access_token");
                 window.location.reload();
+            });
+
+            // Update lesson progress
+            const lessonBox = document.getElementById("lesson-box");
+            const completionPercentage = document.getElementById("completion-percentage");
+            const progress = localStorage.getItem("problem_solving_progress") || 0;
+            completionPercentage.textContent = `${progress}% Completed`;
+
+            lessonBox.addEventListener("click", () => {
+                window.location.href = "/AntiTutorialHell/ProblemSolving/index.html";
             });
         });
     </script>
