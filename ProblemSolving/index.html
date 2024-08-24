@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anti-Tutorial Hell - Problem Solving</title>
+    <title>Unity Problem Solving Quiz</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,59 +14,62 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             min-height: 100vh;
         }
-
+        .top-bar {
+            width: 100%;
+            background-color: #23272a;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        .top-bar h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        .top-bar .progress-text {
+            font-size: 1em;
+        }
         .container {
-            max-width: 1000px;
+            width: 100%;
+            max-width: 800px;
             margin: 20px;
             background-color: #3b3e44;
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            display: flex;
-            flex-direction: row;
         }
-
-        .container-mobile {
-            flex-direction: column;
+        .content, .quiz {
+            width: 100%;
         }
-
-        .content {
-            flex: 1;
-            padding: 20px;
-        }
-
         .content h2 {
             margin-top: 0;
         }
-
         .content p {
             line-height: 1.5;
             white-space: pre-wrap;
         }
-
         .quiz {
-            flex: 1;
-            padding: 20px;
+            padding: 20px 0;
             display: flex;
             flex-direction: column;
         }
-
         .quiz label {
             margin-bottom: 10px;
         }
-
         .quiz input[type="radio"], .quiz textarea {
             margin-right: 10px;
         }
-
+        .feedback {
+            color: green;
+            margin-bottom: 10px;
+        }
         .progress {
             margin-top: 20px;
             text-align: center;
         }
-
         .progress button {
             padding: 10px 20px;
             border: none;
@@ -75,22 +78,14 @@
             color: white;
             cursor: pointer;
         }
-
         .progress button:disabled {
             background-color: #4f545c;
             cursor: not-allowed;
         }
-
         #typewriter {
             font-size: 1.2em;
             margin-bottom: 20px;
         }
-
-        #feedback {
-            color: green;
-            margin-bottom: 10px;
-        }
-
         #code-input {
             width: 100%;
             height: 100px;
@@ -101,7 +96,6 @@
             padding: 10px;
             resize: none;
         }
-
         #next-btn {
             display: block;
             margin: 20px auto;
@@ -112,24 +106,44 @@
             border-radius: 5px;
             cursor: pointer;
         }
-
         #next-btn:disabled {
             background-color: #4f545c;
             cursor: not-allowed;
         }
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            .top-bar {
+                padding: 10px;
+            }
+            .top-bar h1 {
+                font-size: 1.2em;
+            }
+            .top-bar .progress-text {
+                font-size: 0.9em;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="top-bar">
+        <h1>Unity Problem Solving Quiz</h1>
+        <div class="progress-text" id="progress-text">Progress: 0%</div>
+    </div>
+
     <div class="container" id="lesson-container">
-        <div class="content" id="typewriter-section">
-            <h2>Understanding Problem Solving in Unity</h2>
-            <p id="typewriter"></p>
-            <button id="next-btn">Next</button>
+        <div class="content" id="introduction-section">
+            <h2>Welcome to the Unity Problem-Solving Lesson!</h2>
+            <p>Problem-solving is a critical skill in programming and game development. It involves breaking down complex issues into smaller, more manageable parts and working through them logically. In Unity, you'll often encounter situations where you need to solve problems creatively to achieve the desired gameplay or functionality. Let's dive into some basics and test your understanding with a quiz.</p>
+            <button id="next-btn">Start Quiz</button>
         </div>
+
         <div class="quiz" id="quiz-section" style="display:none;">
-            <div id="feedback"></div>
+            <div id="feedback" class="feedback"></div>
             <div id="question-1" class="question">
-                <label>1. What is problem-solving?</label>
+                <label id="question-text-1">1. What is problem-solving?</label>
                 <label>
                     <input type="radio" name="quiz1" value="correct"> Breaking down a problem into smaller, manageable parts.
                 </label>
@@ -142,7 +156,7 @@
             </div>
 
             <div id="question-2" class="question" style="display:none;">
-                <label>2. What function in Unity is used to print text to the console?</label>
+                <label id="question-text-2">2. What function in Unity is used to print text to the console?</label>
                 <label>
                     <input type="radio" name="quiz2" value="correct"> Debug.Log
                 </label>
@@ -155,12 +169,12 @@
             </div>
 
             <div id="question-3" class="question" style="display:none;">
-                <label>3. Write the code to display "Hello World" in the Unity console.</label>
+                <label id="question-text-3">3. Write the code to display "Hello World" in the Unity console.</label>
                 <textarea id="code-input" placeholder="Type your code here..."></textarea>
             </div>
 
             <div id="question-4" class="question" style="display:none;">
-                <label>4. What is a common use for `Start()` in Unity scripts?</label>
+                <label id="question-text-4">4. What is a common use for `Start()` in Unity scripts?</label>
                 <label>
                     <input type="radio" name="quiz4" value="correct"> Initialize variables or set up the state of the script.
                 </label>
@@ -173,7 +187,7 @@
             </div>
 
             <div id="question-5" class="question" style="display:none;">
-                <label>5. What is the purpose of `Update()` in Unity?</label>
+                <label id="question-text-5">5. What is the purpose of `Update()` in Unity?</label>
                 <label>
                     <input type="radio" name="quiz5" value="correct"> It is called once per frame and is used to update the game state.
                 </label>
@@ -193,14 +207,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const typewriterText = `Problem-solving is a critical skill in programming and game development. 
-                                    It involves breaking down complex issues into smaller, more manageable parts 
-                                    and working through them logically. In Unity, you'll often encounter situations 
-                                    where you need to solve problems creatively to achieve the desired gameplay or 
-                                    functionality. Let's dive into some basics and test your understanding with a quiz.`;
-
-            const typewriterElement = document.getElementById("typewriter");
-            let charIndex = 0;
+            const progressTextElement = document.getElementById("progress-text");
             const nextBtn = document.getElementById("next-btn");
             const submitBtn = document.getElementById("submit-btn");
             const quizSection = document.getElementById("quiz-section");
@@ -208,70 +215,89 @@
 
             const questions = document.querySelectorAll(".question");
             let currentQuestion = 0;
+            let correctAnswers = 0;
+
+            const typewriterSpeed = 20; // Faster typewriter speed
 
             // Typewriter Effect
-            function typeWriter() {
-                if (charIndex < typewriterText.length) {
-                    typewriterElement.textContent += typewriterText.charAt(charIndex);
-                    charIndex++;
-                    setTimeout(typeWriter, 50);
-                } else {
-                    nextBtn.disabled = false;
+            function typeWriter(elementId, text) {
+                let charIndex = 0;
+                function type() {
+                    if (charIndex < text.length) {
+                        document.getElementById(elementId).textContent += text.charAt(charIndex);
+                        charIndex++;
+                        setTimeout(type, typewriterSpeed);
+                    }
                 }
+                type();
             }
 
-            typeWriter();
-
             nextBtn.addEventListener("click", function () {
-                document.getElementById("typewriter-section").style.display = "none";
+                document.getElementById("introduction-section").style.display = "none";
                 quizSection.style.display = "block";
                 showQuestion(currentQuestion);
             });
 
-            // Enable submit button when an option is selected or text is entered
-            document.querySelectorAll('input[type="radio"], #code-input').forEach(element => {
-                element.addEventListener("change", () => {
+            // Enable submit button when an answer is selected
+            document.querySelectorAll('input[type="radio"]').forEach((radio) => {
+                radio.addEventListener("change", function () {
                     submitBtn.disabled = false;
                 });
             });
 
-            // Handle quiz submission
             submitBtn.addEventListener("click", function () {
-                submitBtn.disabled = true;
-                const currentQuestionElement = questions[currentQuestion];
-                let selectedOption;
-                
-                if (currentQuestionElement.querySelector("textarea")) {
-                    selectedOption = currentQuestionElement.querySelector("textarea").value.trim();
-                } else {
-                    selectedOption = currentQuestionElement.querySelector('input[name="quiz' + (currentQuestion + 1) + '"]:checked');
-                }
+                const selectedOption = document.querySelector(`input[name="quiz${currentQuestion + 1}"]:checked`);
 
-                // Check if answer is correct
-                if (currentQuestion === 2 && selectedOption === 'Debug.Log("Hello World");') {
-                    feedback.textContent = "Correct!";
-                } else if (selectedOption && selectedOption.value === "correct") {
-                    feedback.textContent = "Correct!";
-                } else {
-                    feedback.textContent = "Try again!";
-                    submitBtn.disabled = false;
+                if (!selectedOption) {
+                    feedback.textContent = "";
                     return;
                 }
 
+                if (selectedOption.value === "correct") {
+                    correctAnswers++;
+                    feedback.textContent = "";
+                    nextQuestion();
+                } else {
+                    feedback.textContent = "Try again!";
+                }
+
+                updateProgress();
+            });
+
+            function nextQuestion() {
                 currentQuestion++;
                 if (currentQuestion < questions.length) {
                     showQuestion(currentQuestion);
                 } else {
-                    feedback.textContent = "Congratulations, you've completed the lesson!";
-                    submitBtn.disabled = true;
+                    quizSection.innerHTML = "<h2>You've completed the quiz!</h2>";
                 }
-            });
+            }
 
             function showQuestion(index) {
                 questions.forEach((question, idx) => {
                     question.style.display = idx === index ? "block" : "none";
                 });
+
+                const questionTextId = `question-text-${index + 1}`;
+                const questionText = document.getElementById(questionTextId).textContent;
+
+                if (index === 2) { // Special case for code input question
+                    typeWriter('code-input', 'Debug.Log("Hello World");');
+                } else {
+                    typeWriter(questionTextId, questionText);
+                }
             }
+
+            function updateProgress() {
+                const percentage = Math.round((correctAnswers / questions.length) * 100);
+                progressTextElement.textContent = `Progress: ${percentage}%`;
+            }
+
+            // Allow leaving at any time
+            window.addEventListener("beforeunload", function (e) {
+                e.preventDefault();
+                e.returnValue = '';
+            });
         });
     </script>
 </body>
