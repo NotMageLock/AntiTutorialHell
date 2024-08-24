@@ -105,10 +105,6 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const clientId = "1276633303792750664";
-            const redirectUri = "https://notmagelock.github.io/AntiTutorialHell/";
-            const scope = "identify";
-            
             const profileDropdown = document.getElementById("profile-dropdown");
             const dropdownArrow = document.getElementById("dropdown-arrow");
             const profileDropdownContent = document.getElementById("profile-dropdown-content");
@@ -144,7 +140,13 @@
                 .then(response => response.json())
                 .then(data => {
                     profilePic.src = `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.png`;
-                    username.textContent = data.username;
+
+                    const savedDisplayName = localStorage.getItem("display_name");
+                    if (savedDisplayName) {
+                        username.textContent = savedDisplayName;
+                    } else {
+                        username.textContent = data.username;
+                    }
                 })
                 .catch(error => {
                     console.error("Error fetching Discord user data:", error);
@@ -152,7 +154,7 @@
             }
 
             settingsBtn.addEventListener("click", () => {
-                window.location.href = "/settings/";
+                window.location.href = "/AntiTutorialHell/settings/";
             });
 
             logoutBtn.addEventListener("click", () => {
